@@ -4,12 +4,12 @@ require_once('config.inc.php');
 $dateFrom = isset($_GET['dateFrom']) ? $_GET['dateFrom'] : date('Y-m-d');
 $dateTo = isset($_GET['dateTo']) ? $_GET['dateTo'] : date('Y-m-d');
 
-if(isset($_GET['accuracy'])){
-	$accuracy = intval($_GET['accuracy']);
-}else if(isset($_COOKIE['accuracy'])){
-	$accuracy = intval($_COOKIE['accuracy']);
-}else{
-	$accuracy = $_config['default_accuracy'];
+if (isset($_GET['accuracy'])) {
+    $accuracy = intval($_GET['accuracy']);
+} elseif (isset($_COOKIE['accuracy'])) {
+    $accuracy = intval($_COOKIE['accuracy']);
+} else {
+    $accuracy = $_config['default_accuracy'];
 }
 
 ?>

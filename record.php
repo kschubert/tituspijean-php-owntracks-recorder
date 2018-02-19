@@ -1,60 +1,92 @@
 <?php
 //http://owntracks.org/booklet/tech/http/
-    # Obtain the JSON payload from an OwnTracks app POSTed via HTTP
-    # and insert into database table.
+# Obtain the JSON payload from an OwnTracks app POSTed via HTTP
+# and insert into database table.
 
-    header("Content-type: application/json");
-    require_once('config.inc.php');
+header("Content-type: application/json");
+require_once('config.inc.php');
 
-    $payload = file_get_contents("php://input");
-    $data =  @json_decode($payload, true);
+$payload = file_get_contents("php://input");
+$data =  @json_decode($payload, true);
 
-    if ($data['_type'] == 'location') {
+if ($data['_type'] == 'location') {
+    # CREATE TABLE locations (dt TIMESTAMP, tid CHAR(2), lat DECIMAL(9,6), lon DECIMAL(9,6));
+    $mysqli = new mysqli($_config['sql_host'], $_config['sql_user'], $_config['sql_pass'], $_config['sql_db']);
 
-        # CREATE TABLE locations (dt TIMESTAMP, tid CHAR(2), lat DECIMAL(9,6), lon DECIMAL(9,6));
-        $mysqli = new mysqli($_config['sql_host'], $_config['sql_user'], $_config['sql_pass'], $_config['sql_db']);
-
-		//http://owntracks.org/booklet/tech/json/
-        if (array_key_exists('acc', $data)) $accuracy = $data['acc'];
-        if (array_key_exists('alt', $data)) $altitude = $data['alt'];
-        if (array_key_exists('batt', $data)) $battery_level = $data['batt'];
-		if (array_key_exists('cog', $data)) $heading = $data['cog'];
-		if (array_key_exists('desc', $data)) $description = $data['desc'];
-		if (array_key_exists('event', $data)) $event = $data['event'];
-		if (array_key_exists('lat', $data)) $latitude = $data['lat'];
-		if (array_key_exists('lon', $data)) $longitude = $data['lon'];
-		if (array_key_exists('rad', $data)) $radius = $data['rad'];
-		if (array_key_exists('t', $data)) $trig = $data['t'];
-		if (array_key_exists('tid', $data)) $tracker_id = $data['tid'];
-		if (array_key_exists('tst', $data)) $epoch = $data['tst'];
-		if (array_key_exists('vac', $data)) $vertical_accuracy = $data['vac'];
-		if (array_key_exists('vel', $data)) $velocity = $data['vel'];
-		if (array_key_exists('p', $data)) $pressure = $data['p'];
-		if (array_key_exists('conn', $data)) $connection = $data['conn'];
+    //http://owntracks.org/booklet/tech/json/
+    if (array_key_exists('acc', $data)) {
+        $accuracy = $data['acc'];
+    }
+    if (array_key_exists('alt', $data)) {
+        $altitude = $data['alt'];
+    }
+    if (array_key_exists('batt', $data)) {
+        $battery_level = $data['batt'];
+    }
+    if (array_key_exists('cog', $data)) {
+        $heading = $data['cog'];
+    }
+    if (array_key_exists('desc', $data)) {
+        $description = $data['desc'];
+    }
+    if (array_key_exists('event', $data)) {
+        $event = $data['event'];
+    }
+    if (array_key_exists('lat', $data)) {
+        $latitude = $data['lat'];
+    }
+    if (array_key_exists('lon', $data)) {
+        $longitude = $data['lon'];
+    }
+    if (array_key_exists('rad', $data)) {
+        $radius = $data['rad'];
+    }
+    if (array_key_exists('t', $data)) {
+        $trig = $data['t'];
+    }
+    if (array_key_exists('tid', $data)) {
+        $tracker_id = $data['tid'];
+    }
+    if (array_key_exists('tst', $data)) {
+        $epoch = $data['tst'];
+    }
+    if (array_key_exists('vac', $data)) {
+        $vertical_accuracy = $data['vac'];
+    }
+    if (array_key_exists('vel', $data)) {
+        $velocity = $data['vel'];
+    }
+    if (array_key_exists('p', $data)) {
+        $pressure = $data['p'];
+    }
+    if (array_key_exists('conn', $data)) {
+        $connection = $data['conn'];
+    }
     $user = $_SERVER['PHP_AUTH_USER'];
 
-		if ($epoch)
-		{
-			$dt = new DateTime("@$epoch");  // convert UNIX timestamp to PHP DateTime
-			$timestamp = $dt->format('Y-m-d H:i:s'); // output = 2017-01-01 00:00:00
-		}
-
-
-		$sql = "INSERT INTO ".$_config['sql_prefix']."locations (dt, accuracy, altitude, battery_level, heading, description, event, latitude, longitude, radius, trig, tracker_id, epoch, vertical_accuracy, velocity, pressure, connection, user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        if ($stmt = $mysqli->prepare($sql))
-		{
-			# bind parameters (s = string, i = integer, d = double,  b = blob)
-			$stmt->bind_param('siiiissddisssiidss', $timestamp, $accuracy, $altitude, $battery_level, $heading, $description, $event, $latitude, $longitude, $radius, $trig, $tracker_id, $epoch, $vertical_accuracy, $velocity, $pressure, $connection, $user);
-			$stmt->execute();
-			$stmt->close();
-		}else{
-			die("Can't write to database");
-		}
-
+    if ($epoch) {
+        $dt = new DateTime("@$epoch");  // convert UNIX timestamp to PHP DateTime
+        $timestamp = $dt->format('Y-m-d H:i:s'); // output = 2017-01-01 00:00:00
     }
 
-    $response = array();
-    # optionally add objects to return to the app (e.g.
-    # friends or cards)
-    print json_encode($response);
-?>
+    $sql = 'INSERT INTO '.$_config['sql_prefix'].'locations
+    (dt, accuracy, altitude, battery_level, heading, description, event, latitude, longitude, radius, trig, tracker_id,
+     epoch, vertical_accuracy, velocity, pressure, connection, user)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    if ($stmt = $mysqli->prepare($sql)) {
+        # bind parameters (s = string, i = integer, d = double,  b = blob)
+        $params='"siiiissddisssiidss", $timestamp, $accuracy, $altitude, $battery_level, $heading, $description, $event,
+         $latitude, $longitude, $radius, $trig, $tracker_id, $epoch, $vertical_accuracy, $velocity, $pressure,
+          $connection, $user';
+        $stmt->bind_param($params);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        die("Can't write to database");
+    }
+}
+
+$response = array();
+# optionally add objects to return to the app (e.g.
+# friends or cards)
+print json_encode($response);
