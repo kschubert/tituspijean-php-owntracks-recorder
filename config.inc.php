@@ -1,6 +1,6 @@
 <?php
 
-	$_config['sql_host'] = 'locahost';
+	$_config['sql_host'] = 'localhost';
 	$_config['sql_user'] = '__USER__';
 	$_config['sql_pass'] = '__DB_PWD__';
 	$_config['sql_db'] = '__USER__';
