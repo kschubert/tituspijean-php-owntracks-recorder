@@ -69,15 +69,15 @@ if ($data['_type'] == 'location') {
         $timestamp = $dt->format('Y-m-d H:i:s'); // output = 2017-01-01 00:00:00
     }
 
-    $sql = 'INSERT INTO '.$_config['sql_prefix'].'locations
+    $sql = "INSERT INTO ".$_config['sql_prefix']."locations
     (dt, accuracy, altitude, battery_level, heading, description, event, latitude, longitude, radius, trig, tracker_id,
      epoch, vertical_accuracy, velocity, pressure, connection, user)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     if ($stmt = $mysqli->prepare($sql)) {
         # bind parameters (s = string, i = integer, d = double,  b = blob)
-        $params='"siiiissddisssiidss", $timestamp, $accuracy, $altitude, $battery_level, $heading, $description, $event,
-         $latitude, $longitude, $radius, $trig, $tracker_id, $epoch, $vertical_accuracy, $velocity, $pressure,
-          $connection, $user';
+        $params="\'siiiissddisssiidss'\, $timestamp, $accuracy, $altitude, $battery_level, $heading, $description,
+         $event, $latitude, $longitude, $radius, $trig, $tracker_id, $epoch, $vertical_accuracy, $velocity, $pressure,
+          $connection, $user";
         $stmt->bind_param($params);
         $stmt->execute();
         $stmt->close();
