@@ -29,7 +29,7 @@
     $time_to = mktime(23, 59, 59, $time_to['tm_mon']+1, $time_to['tm_mday'], $time_to['tm_year']+1900);
     //$time_to = strtotime('+1 day', $time_to);
 
-	$sql = "SELECT * FROM ".$_config['sql_prefix']."locations WHERE epoch >= $time_from AND epoch <= $time_to AND accuracy < ".$_GET['accuracy']." AND user = $_SERVER['PHP_AUTH_USER'] ORDER BY epoch ASC";
+	$sql = "SELECT * FROM ".$_config['sql_prefix']."locations WHERE epoch >= $time_from AND epoch <= $time_to AND accuracy < ".$_GET['accuracy']." AND user = '".$_SERVER['PHP_AUTH_USER']."' ORDER BY epoch ASC";
     echo "//$sql\n\n";
 
     $stmt = $mysqli->prepare($sql);
