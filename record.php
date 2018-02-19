@@ -31,7 +31,8 @@
 		if (array_key_exists('vel', $data)) $velocity = $data['vel'];
 		if (array_key_exists('p', $data)) $pressure = $data['p'];
 		if (array_key_exists('conn', $data)) $connection = $data['conn'];
-		
+    if (array_key_exists('user', $data)) $user = $data['user'];
+
 		if ($epoch)
 		{
 			$dt = new DateTime("@$epoch");  // convert UNIX timestamp to PHP DateTime
@@ -39,11 +40,11 @@
 		}
 
 
-		$sql = "INSERT INTO ".$_config['sql_prefix']."locations (dt, accuracy, altitude, battery_level, heading, description, event, latitude, longitude, radius, trig, tracker_id, epoch, vertical_accuracy, velocity, pressure, connection) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$sql = "INSERT INTO ".$_config['sql_prefix']."locations (dt, accuracy, altitude, battery_level, heading, description, event, latitude, longitude, radius, trig, tracker_id, epoch, vertical_accuracy, velocity, pressure, connection, user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         if ($stmt = $mysqli->prepare($sql))
 		{
 			# bind parameters (s = string, i = integer, d = double,  b = blob)
-			$stmt->bind_param('siiiissddisssiids', $timestamp, $accuracy, $altitude, $battery_level, $heading, $description, $event, $latitude, $longitude, $radius, $trig, $tracker_id, $epoch, $vertical_accuracy, $velocity, $pressure, $connection);
+			$stmt->bind_param('siiiissddisssiids', $timestamp, $accuracy, $altitude, $battery_level, $heading, $description, $event, $latitude, $longitude, $radius, $trig, $tracker_id, $epoch, $vertical_accuracy, $velocity, $pressure, $connection, $user);
 			$stmt->execute();
 			$stmt->close();
 		}else{

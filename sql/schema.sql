@@ -15,5 +15,6 @@ CREATE TABLE `locations` (
   `vertical_accuracy` int(11) DEFAULT NULL,
   `velocity` int(11) DEFAULT NULL,
   `pressure` decimal(9,6) DEFAULT NULL,
-  `connection` varchar(1) DEFAULT NULL
+  `connection` varchar(1) DEFAULT NULL,
+  `user` TINYTEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
