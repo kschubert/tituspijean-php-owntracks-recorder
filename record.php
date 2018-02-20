@@ -75,10 +75,27 @@ if ($data['_type'] == 'location') {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     if ($stmt = $mysqli->prepare($sql)) {
         # bind parameters (s = string, i = integer, d = double,  b = blob)
-        $params="\'siiiissddisssiidss'\, $timestamp, $accuracy, $altitude, $battery_level, $heading, $description,
-         $event, $latitude, $longitude, $radius, $trig, $tracker_id, $epoch, $vertical_accuracy, $velocity, $pressure,
-          $connection, $user";
-        $stmt->bind_param($params);
+        $stmt->bind_param(
+            'siiiissddisssiidss',
+            $timestamp,
+            $accuracy,
+            $altitude,
+            $battery_level,
+            $heading,
+            $description,
+            $event,
+            $latitude,
+            $longitude,
+            $radius,
+            $trig,
+            $tracker_id,
+            $epoch,
+            $vertical_accuracy,
+            $velocity,
+            $pressure,
+            $connection,
+            $user
+        );
         $stmt->execute();
         $stmt->close();
     } else {
