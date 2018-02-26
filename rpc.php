@@ -16,8 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && array_key_exists('action', $_POST))
               $response['error'] = "No epoch provided for marker removal";
               $response['status'] = false;
         } else {
-              $stmt = $mysqli->prepare("DELETE FROM ".$_config['sql_prefix']."locations
-              WHERE user = $_SERVER['PHP_AUTH_USER'] AND epoch = ?");
+              $sql = "DELETE FROM ".$_config['sql_prefix']."locations
+                      WHERE user = $_SERVER['PHP_AUTH_USER'] AND epoch = ?";
+              $stmt = $mysqli->prepare($sql);
             if (!$stmt) {
                 $response['error'] = "Unable to prepare statement : " . $mysqli->error;
                 $response['status'] = false;
