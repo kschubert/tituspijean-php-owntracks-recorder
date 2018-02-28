@@ -36,10 +36,8 @@ ORDER BY epoch ASC";
 
 $stmt = $mysqli->prepare($sql);
 $stmt->execute();
-$result = $stmt->get_result();
-$stmt->store_result();
-
-while ($data = $result->fetch_assoc()) {
+$result = get_result($stmt);
+while ($data = array_shift($result)) {
     //Loop through results here $data[]
     $markers[] = $data;
 }
